@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Mindspace - WiFi Guest Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 480px;
+            width: 100%;
+            padding: 40px 30px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus {
+            outline: none;
+            border-color: #3498db;
+            background-color: #f8fbff;
+        }
+
+        .checkbox-group {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.5;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <!-- Replace this URL with your actual Mindspace logo URL -->
+            <img src="https://www.mindspace.me/wp-content/themes/mindspace/assets/images/logo.svg" 
+                 alt="Mindspace Logo" 
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjUwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjkwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMmMzZTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NaW5kc3BhY2U8L3RleHQ+PC9zdmc+'">
+        </div>
+
+        <h1>Welcome to Mindspace</h1>
+        <p class="subtitle">Please complete the form to connect to our WiFi network</p>
+
+        <form id="guestForm">
+            <div class="form-group">
+                <label for="firstName">First Name <span class="required">*</span></label>
+                <input type="text" id="firstName" name="firstName" required>
+                <div class="error-message" id="firstNameError">Please enter your first name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name <span class="required">*</span></label>
+                <input type="text" id="lastName" name="lastName" required>
+                <div class="error-message" id="lastNameError">Please enter your last name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone <span class="required">*</span></label>
+                <input type="tel" id="phone" name="phone" required placeholder="+1-555-123-4567">
+                <div class="error-message" id="phoneError">Please enter your phone number</div>
+            </div>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="marketing" name="marketing">
+                    <label for="marketing" class="checkbox-label">
+                        I agree to receive marketing and promotional materials from Mindspace
+                    </label>
+                </div>
+
+                <div class="checkbox-item">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms" class="checkbox-label">
+                        <span class="required">*</span> I understand that I am connecting to a public network and that I use it at my own risk
+                    </label>
+                </div>
+                <div class="error-message" id="termsError">You must accept the terms to continue</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Connect to Network
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                Connecting to network, please wait...
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get Meraki parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const baseGrantUrl = urlParams.get('base_grant_url');
+        const userContinueUrl = urlParams.get('user_continue_url');
+        const nodeId = urlParams.get('node_id');
+        const clientMac = urlParams.get('client_mac');
+        const clientIp = urlParams.get('client_ip');
+
+        // ⚠️ IMPORTANT: Replace this with your Google Apps Script Web App URL
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+        const form = document.getElementById('guestForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
+
+        // Form validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(fieldId, show) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate fields
+            let isValid = true;
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const terms = document.getElementById('terms').checked;
+
+            showError('firstName', !firstName);
+            showError('lastName', !lastName);
+            showError('email', !validateEmail(email));
+            showError('phone', !phone);
+            showError('terms', !terms);
+
+            if (!firstName || !lastName || !validateEmail(email) || !phone || !terms) {
+                return;
+            }
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+
+            // Prepare data
+            const formData = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                marketing: document.getElementById('marketing').checked,
+                terms: terms,
+                timestamp: new Date().toISOString(),
+                clientMac: clientMac || 'N/A',
+                clientIp: clientIp || 'N/A',
+                nodeId: nodeId || 'N/A'
+            };
+
+            try {
+                // Send to Google Sheets
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // Grant network access via Meraki
+                if (baseGrantUrl) {
+                    const duration = 3600; // 1 hour in seconds (adjust as needed)
+                    const grantUrl = baseGrantUrl + '?duration=' + duration;
+                    
+                    loading.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to grant access
+                    setTimeout(() => {
+                        window.location.href = grantUrl;
+                    }, 1500);
+                } else {
+                    // Fallback if no Meraki URL (testing mode)
+                    loading.style.display = 'none';
+                    successMessage.textContent = 'Form submitted successfully!';
+                    successMessage.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Even if Google Sheets fails, still grant network access
+                if (baseGrantUrl) {
+                    const duration = 3600;
+                    const grantUrl = baseGrantUrl + '?duration=' + duration;
+                    window.location.href = grantUrl;
+                } else {
+                    loading.style.display = 'none';
+                    submitBtn.disabled = false;
+                    alert('An error occurred, please try again');
+                }
+            }
+        });
+
+        // Real-time validation
+        document.getElementById('email').addEventListener('blur', function() {
+            showError('email', !validateEmail(this.value.trim()));
+        });
+
+        document.getElementById('terms').addEventListener('change', function() {
+            showError('terms', !this.checked);
+        });
+    </script>
+</body>
+</html>
